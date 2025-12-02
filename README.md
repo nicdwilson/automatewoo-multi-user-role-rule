@@ -64,6 +64,17 @@ The rule checks all roles in a user's `$user->roles` array, not just the first o
 - And you check for `'premium_member'`
 - The rule will return `true` (whereas the default rule would return `false`)
 
+### Technical Implementation
+
+1. **Value Normalization**: AutomateWoo may pass the role value as an array even for single-select fields. The rule automatically normalizes this to handle both string and array values.
+
+2. **Customer Retrieval**: The rule includes fallback logic to retrieve the customer object:
+   - First, uses the customer passed directly to the validate method
+   - If not available, retrieves from the workflow's data layer
+   - If still not found, attempts to get the customer from the order in the data layer
+
+3. **Debug Logging**: All validation steps are logged to WooCommerce logs for troubleshooting. Check `WooCommerce > Status > Logs` for files starting with `automatewoo-multi-user-role-rule`.
+
 ## Differences from Default Rule
 
 | Feature | Default "Customer - User Role" | This Plugin "Customer - Roles Contains" |
@@ -80,6 +91,16 @@ The rule checks all roles in a user's `$user->roles` array, not just the first o
 - **Data Item**: Customer
 - **Comparison Types**: `is`, `is_not`
 - **Namespace**: `AutomateWoo_Multi_User_Role_Rule`
+- **Debugging**: Comprehensive logging via WooCommerce logger (check `wp-content/uploads/wc-logs/automatewoo-multi-user-role-rule-*.log`)
+
+## Features
+
+- ✅ Checks **all** user roles, not just the first one
+- ✅ Handles array values from AutomateWoo (normalizes automatically)
+- ✅ Fallback logic to retrieve customer from order when needed
+- ✅ Comprehensive debug logging for troubleshooting
+- ✅ Works with manually triggered workflows
+- ✅ Supports guest users
 
 ## Changelog
 
@@ -89,6 +110,9 @@ The rule checks all roles in a user's `$user->roles` array, not just the first o
 - HPOS compatibility declaration
 - Support for all WordPress user roles
 - Guest user support
+- Array value normalization
+- Customer retrieval fallback from data layer and orders
+- Comprehensive debug logging via WooCommerce logger
 
 ## Support
 
